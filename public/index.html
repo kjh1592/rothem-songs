@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노래 가사 암기 앱</title>
+    <!-- Material Design Components -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --mdc-theme-primary: #1E88E5; /* Blue 600 */
+            --mdc-theme-secondary: #fdd835; /* Yellow 600 */
+            --mdc-theme-on-primary: #ffffff;
+            --text-primary-on-background: #212121;
+            --text-secondary-on-background: #757575;
+        }
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+        }
+        .hidden { display: none; }
+        .mdc-top-app-bar { background-color: var(--mdc-theme-primary); }
+        main { padding: 16px; }
+        .mdc-card {
+            border-radius: 12px;
+            margin-bottom: 16px;
+            padding: 16px;
+        }
+        .song-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        .song-list-item .icon {
+            font-size: 40px;
+            color: var(--mdc-theme-primary);
+            margin-right: 16px;
+        }
+        .song-list-item .info {
+            flex-grow: 1;
+        }
+        .song-list-item .title {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: var(--text-primary-on-background);
+        }
+        .song-list-item .artist {
+            color: var(--text-secondary-on-background);
+        }
+        #lyrics-content, #quiz-content {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            padding: 16px 0;
+            color: var(--text-primary-on-background);
+            font-size: 1.2em;
+        }
+        .quiz-hidden { color: var(--mdc-theme-primary); cursor: pointer; font-weight: bold; }
+        .mdc-button--raised { background-color: var(--mdc-theme-primary); }
+        #media-player { margin-top: 16px; }
+        .media-control-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .media-control-row .label {
+            width: 80px;
+            font-weight: 500;
+            color: var(--text-secondary-on-background);
+        }
+        .media-control-row .mdc-button {
+            margin-left: 16px;
+        }
+        .back-button-large {
+            height: 48px !important;
+            padding: 0 24px !important;
+            --mdc-typography-button-font-size: 1.25rem;
+        }
+    </style>
+</head>
+<body class="mdc-typography">
+
+    <header class="mdc-top-app-bar">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <span class="mdc-top-app-bar__title">음악 앱</span>
+            </section>
+        </div>
+    </header>
+
+    <main class="mdc-top-app-bar--fixed-adjust">
+        <div id="song-list-container" class="mdc-card">
+            <h2 class="mdc-typography--headline6" style="margin-bottom: 16px;">노래 목록</h2>
+            <ul id="song-list"></ul>
+        </div>
+
+        <div id="lyrics-container" class="mdc-card hidden">
+            <button class="mdc-button back-button-large" onclick="showSongList()">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                <span class="mdc-button__label">목록</span>
+            </button>
+            <h2 id="lyrics-title" class="mdc-typography--headline5" style="margin-top: 16px;"></h2>
+            <div id="media-controls"></div>
+            <div id="media-player"></div>
+            <div id="lyrics-content"></div>
+            <div class="mdc-card__actions">
+                <button class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button" onclick="showQuiz()">
+                    <span class="mdc-button__label">퀴즈 시작</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="quiz-container" class="mdc-card hidden">
+             <button class="mdc-button back-button-large" onclick="showLyrics(currentSong.id)">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                <span class="mdc-button__label">가사 보기</span>
+            </button>
+            <h2 id="quiz-title" class="mdc-typography--headline5"></h2>
+            <div id="quiz-controls">
+                <button class="mdc-button mdc-button--raised" onclick="startQuiz(1)"><span class="mdc-button__label">1단계</span></button>
+                <button class="mdc-button mdc-button--raised" onclick="startQuiz(2)"><span class="mdc-button__label">2단계</span></button>
+                <button class="mdc-button mdc-button--raised" onclick="startQuiz(3)"><span class="mdc-button__label">3단계</span></button>
+            </div>
+            <div id="quiz-content"></div>
+        </div>
+        
+        <div id="guide-container" class="mdc-card hidden">
+            <button class="mdc-button back-button-large" onclick="showSongList()">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                <span class="mdc-button__label">목록</span>
+            </button>
+            <h2 class="mdc-typography--headline6">암기 가이드</h2>
+            <ul class="mdc-list mdc-list--non-interactive">
+                <li class="mdc-list-item"><span class="mdc-list-item__text">1. 전체 음악을 들으며 가사를 확인합니다.</span></li>
+                <li class="mdc-list-item"><span class="mdc-list-item__text">2. 파트별 음원을 들으며 본인 파트의 가사를 익힙니다.</span></li>
+                <li class="mdc-list-item"><span class="mdc-list-item__text">3. 퀴즈 기능을 통해 암기 수준을 확인합니다. (1~3단계)</span></li>
+                <li class="mdc-list-item"><span class="mdc-list-item__text">4. 가려진 부분을 클릭하면 정답을 확인할 수 있습니다.</span></li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
+    <script src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="/__/firebase/9.6.1/firebase-auth-compat.js"></script>
+
+    <script>
+        mdc.autoInit();
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDN_WK-HTomdV4z6uCC02NsfzY5-mCwvjM",
+            authDomain: "rhthem-songs.firebaseapp.com",
+            projectId: "rhthem-songs",
+            storageBucket: "rhthem-songs.firebasestorage.app",
+            messagingSenderId: "918398728725",
+            appId: "1:918398728725:web:2cb70327cad1c24bbbec1c"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let songs = [];
+        let currentSong = null;
+
+        const songListContainer = document.getElementById('song-list-container');
+        const lyricsContainer = document.getElementById('lyrics-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const guideContainer = document.getElementById('guide-container');
+
+        const lyricsTitle = document.getElementById('lyrics-title');
+        const mediaControls = document.getElementById('media-controls');
+        const mediaPlayer = document.getElementById('media-player');
+        const lyricsContent = document.getElementById('lyrics-content');
+        const quizTitle = document.getElementById('quiz-title');
+        const quizContent = document.getElementById('quiz-content');
+
+        function showView(viewToShow) {
+            [songListContainer, lyricsContainer, quizContainer, guideContainer].forEach(view => {
+                view.classList.add('hidden');
+            });
+            viewToShow.classList.remove('hidden');
+        }
+
+        function showSongList() { showView(songListContainer); }
+        function showGuide() { showView(guideContainer); }
+
+        function showLyrics(songId) {
+            currentSong = songs.find(s => s.id === songId);
+            if (!currentSong) return;
+
+            lyricsTitle.textContent = currentSong.title;
+            lyricsContent.textContent = currentSong.lyrics;
+            
+            mediaControls.innerHTML = '';
+            mediaPlayer.innerHTML = '';
+            if (currentSong.media) {
+                const partOrder = ['soprano', 'alto', 'tenor', 'bass'];
+                const partNames = {
+                    soprano: '소프라노',
+                    alto: '알토',
+                    tenor: '테너',
+                    bass: '베이스'
+                };
+
+                if (currentSong.media.full) {
+                    const row = createMediaControlRow('합창');
+                    if (currentSong.media.full.youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.full.youtube);
+                    if (currentSong.media.full.mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.full.mp3);
+                }
+
+                if (currentSong.media.parts) {
+                    partOrder.forEach(part => {
+                        if (currentSong.media.parts[part] && (currentSong.media.parts[part].youtube || currentSong.media.parts[part].mp3)) {
+                            const row = createMediaControlRow(partNames[part] || part);
+                            if (currentSong.media.parts[part].youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.parts[part].youtube);
+                            if (currentSong.media.parts[part].mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.parts[part].mp3);
+                        }
+                    });
+                }
+            }
+            showView(lyricsContainer);
+        }
+
+        function createMediaControlRow(labelText) {
+            const row = document.createElement('div');
+            row.className = 'media-control-row';
+            const label = document.createElement('span');
+            label.className = 'label';
+            label.textContent = labelText;
+            row.appendChild(label);
+            mediaControls.appendChild(row);
+            return row;
+        }
+        
+        function addMediaButton(container, label, type, url) {
+            const button = document.createElement('button');
+            button.className = 'mdc-button mdc-button--raised';
+            button.innerHTML = `<span class="mdc-button__label">${label}</span>`;
+            button.onclick = () => {
+                mediaPlayer.innerHTML = '';
+                if (type === 'youtube') {
+                    mediaPlayer.innerHTML = `<iframe width="100%" height="200" src="${url}" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>`;
+                } else if (type === 'mp3') {
+                    mediaPlayer.innerHTML = `<audio controls src="${url}" style="width: 100%;">Your browser does not support the audio element.</audio>`;
+                }
+            };
+            container.appendChild(button);
+        }
+
+        function showQuiz() {
+            if (!currentSong) return;
+            quizTitle.textContent = `${currentSong.title} - 퀴즈`;
+            quizContent.innerHTML = '단계를 선택하세요.';
+            showView(quizContainer);
+        }
+
+        function startQuiz(level) {
+            if (!currentSong) return;
+            const lyrics = currentSong.lyrics;
+            const words = lyrics.split(/(\s+)/);
+            let hideRatio = 0;
+            if (level === 1) hideRatio = 0.1;
+            if (level === 2) hideRatio = 0.3;
+            if (level === 3) hideRatio = 0.6;
+
+            quizContent.innerHTML = '';
+            words.forEach(word => {
+                if (Math.random() < hideRatio && word.trim().length > 2) {
+                    const span = document.createElement('span');
+                    span.className = 'quiz-hidden';
+                    span.textContent = '·'.repeat(word.length);
+                    span.dataset.original = word;
+                    span.onclick = () => {
+                        span.textContent = span.dataset.original;
+                        span.classList.remove('quiz-hidden');
+                    };
+                    quizContent.appendChild(span);
+                } else {
+                    quizContent.appendChild(document.createTextNode(word));
+                }
+            });
+        }
+
+        auth.signInAnonymously().then(() => {
+            db.collection("songs").onSnapshot((querySnapshot) => {
+                const songListEl = document.getElementById("song-list");
+                songListEl.innerHTML = "";
+                songs = [];
+                querySnapshot.forEach((doc) => {
+                    const song = { id: doc.id, ...doc.data() };
+                    songs.push(song);
+                    const listItem = document.createElement('li');
+                    listItem.className = "song-list-item";
+                    listItem.setAttribute('data-mdc-auto-init', 'MDCRipple');
+                    listItem.innerHTML = `
+                        <i class="material-icons icon" aria-hidden="true">music_note</i>
+                        <div class="info">
+                            <span class="title">${song.title}</span>
+                        </div>
+                        <i class="material-icons" aria-hidden="true">chevron_right</i>
+                    `;
+                    listItem.onclick = () => showLyrics(song.id);
+                    songListEl.appendChild(listItem);
+                });
+            });
+        }).catch((error) => {
+            console.error("Authentication failed:", error);
+            const songListEl = document.getElementById("song-list");
+            songListEl.innerHTML = `<li class="mdc-list-item"><span class="mdc-list-item__text">Error: ${error.message}</span></li>`;
+        });
+
+    </script>
+</body>
+</html>

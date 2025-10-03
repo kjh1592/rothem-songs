@@ -1,0 +1,77 @@
+[
+  {
+    "id": "song-001",
+    "title": "Amazing Grace",
+    "lyrics": "기뻐하고 즐거워하라\n하늘에서 너희에게\n너희에게 상이 큼이라\n\n심령이 가난한 자는 복이 있나니\n천국이 그들의 것이요\n애통하는 자는 복이 있나니\n그들이 위로를 받을 것이요\n\n온유한 자는 복이 있나니\n그들이 땅을 기업으로 받을 것이요\n\n의에 주리고 목마른 자 배부를 것이요\n긍휼히 여기는 자 긍휼히 여김을 받을 것이요\n\n마음이 청결한 자는 복이 있나니\n그들이 하나님을 볼 것이요\n\n화평케 하는 자 복이 있나니\n그들이 하나님의 아들이라 일컬음을 받네\n\n의를 위하여 박해받은 자\n천국이 그들의 그들의 것이라\n\n나로 말미암아 너희를 욕하고\n박해하고 거짓으로 너희를 거슬러\n모든 악한 말을 할 때\n너희에게 복이 있나니\n\n기뻐하고 즐거워하라\n하늘에서 너희에 상이 큼이라\n\n심령이 가난한 자 애통하는 자\n온유한 자 의에 주리고 목마른 자\n긍휼히 여기는 자 맘이 청결한 자\n복이 있나니\n\n화평케 하는 자 의를 위해 박해받은 자\n하늘에서 너희에게 하늘에서 너희에게\n하늘에서 너희에게 너희에게 상이 큼이라\n\n아멘 아멘\n아멘 아멘",
+    "media": {
+      "full": {
+        "youtube": "https://www.youtube.com/embed/Pj1L2x3296M",
+        "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_full.mp3"
+      },
+      "parts": {
+        "soprano": {
+          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=10&end=20",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_soprano.mp3"
+        },
+        "alto": {
+          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=20&end=30",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_alto.mp3"
+        },
+        "tenor": {
+          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=30&end=40",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_tenor.mp3"
+        },
+        "bass": {
+          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=40&end=50",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_bass.mp3"
+        }
+      }
+    }
+  },
+  {
+    "id": "song-002",
+    "title": "Hallelujah Chorus",
+    "lyrics": "Hallelujah! Hallelujah! Hallelujah! Hallelujah! Hallelujah!\nFor the Lord God omnipotent reigneth.",
+    "media": {
+      "full": {
+        "youtube": "https://www.youtube.com/embed/C7SF42-7gB4",
+        "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_full_2.mp3"
+      },
+      "parts": {
+        "soprano": {
+          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=5&end=15",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_soprano_2.mp3"
+        },
+        "alto": {
+          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=15&end=25",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_alto_2.mp3"
+        },
+        "tenor": {
+          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=25&end=35",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_tenor_2.mp3"
+        },
+        "bass": {
+          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=35&end=45",
+          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_bass_2.mp3"
+        }
+      }
+    }
+  },
+  {
+    "id": "song-003",
+    "title": "Imagine",
+    "lyrics": "Imagine there's no heaven\nIt's easy if you try\nNo hell below us\nAbove us only sky",
+    "media": {
+      "full": {
+        "youtube": "https://www.youtube.com/embed/Yp9H0-l6p3Y",
+        "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_full_3.mp3"
+      },
+      "parts": {
+        "soprano": { "youtube": null, "mp3": null },
+        "alto": { "youtube": null, "mp3": null },
+        "tenor": { "youtube": null, "mp3": null },
+        "bass": { "youtube": null, "mp3": null }
+      }
+    }
+  }
+]
