@@ -30,47 +30,59 @@
   },
   {
     "id": "song-002",
-    "title": "Hallelujah Chorus",
-    "lyrics": "Hallelujah! Hallelujah! Hallelujah! Hallelujah! Hallelujah!\nFor the Lord God omnipotent reigneth.",
+    "title": "불쌍히 여기소서(Kyrie eleison)",
+    "lyrics": "Kyrie eleison\nKyrie eleison\nKyrie kyrie kyrie eleison\nKyrie kyrie kyrie eleison\n\nKyrie eleison\nKyrie eleison\nKyrie kyrie kyrie eleison\nKyrie kyrie kyrie eleison\n\nChriste christe eleison\nchriste eleison\nChriste christe eleison\nChriste christe\nchriste eleison\nchriste eleison\n\nKyrie eleison\nKyrie eleison\nKyrie kyrie kyrie eleison\nKyrie kyrie kyrie eleison\n\nKyrie eleison",
     "media": {
       "full": {
-        "youtube": "https://www.youtube.com/embed/C7SF42-7gB4",
-        "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_full_2.mp3"
+        "youtube": "https://www.youtube.com/embed/arP0vDElIVA?si=PrTDMTn79d7OIqru",
+        "mp3": "https://raw.githubusercontent.com/kjh1592/rothem-songs/main/res/%EB%B6%88%EC%8C%8D%ED%9E%88%EC%97%AC%EA%B8%B0%EC%86%8C%EC%84%9C%20-%20%ED%95%A9%EC%B0%BD.mp3"
       },
       "parts": {
         "soprano": {
-          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=5&end=15",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_soprano_2.mp3"
+          "youtube": "https://www.youtube.com/embed/DjL3woC8TfA?si=ybqvtg0Lgk8-g_IZ",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%B6%88%EC%8C%8D%ED%9E%88%EC%97%AC%EA%B8%B0%EC%86%8C%EC%84%9C%20-%20%EC%86%8C%ED%94%84%EB%9D%BC%EB%85%B8.mp3"
         },
         "alto": {
-          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=15&end=25",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_alto_2.mp3"
+          "youtube": "https://www.youtube.com/embed/_LEn6CoMcGA?si=_vYgPyKhP6UJxklR",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%B6%88%EC%8C%8D%ED%9E%88%EC%97%AC%EA%B8%B0%EC%86%8C%EC%84%9C%20-%20%EC%95%8C%ED%86%A0.mp3"
         },
         "tenor": {
-          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=25&end=35",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_tenor_2.mp3"
+          "youtube": "https://www.youtube.com/embed/y9IGr27nLcU?si=7VTXm9kx_YkNeyCB",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%B6%88%EC%8C%8D%ED%9E%88%EC%97%AC%EA%B8%B0%EC%86%8C%EC%84%9C%20-%20%ED%85%8C%EB%84%88.mp3"
         },
         "bass": {
-          "youtube": "https://www.youtube.com/embed/C7SF42-7gB4?start=35&end=45",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_bass_2.mp3"
+          "youtube": "https://www.youtube.com/embed/-lNxPYitBXk?si=hHO4ZUcANYqrTBHS",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%B6%88%EC%8C%8D%ED%9E%88%EC%97%AC%EA%B8%B0%EC%86%8C%EC%84%9C%20-%20%EB%B2%A0%EC%9D%B4%EC%8A%A4.mp3"
         }
       }
     }
   },
   {
     "id": "song-003",
-    "title": "Imagine",
-    "lyrics": "Imagine there's no heaven\nIt's easy if you try\nNo hell below us\nAbove us only sky",
+    "title": "마른뼈들",
+    "lyrics": "옛날에 선지자 있으니 그 이름은 에스겔\n권능의 하나님 그를 불러내었네\n마른 뼈가 많은 골짜기\n우리 주 하나님 말씀하셨네\n뼈가 살아날 수 있을까\n\n그 때 에스겔이 주께 대답하였네 주께서 아시나이다\n그 때 주가 에스겔에게 말하라 하셨네\n놀라운 주의 말씀\n\n너 에스겔아 외쳐 너 에스겔아 외쳐\n너 에스겔아 외쳐 놀라운 주의 말씀\n너희 마른 뼈들아 주의 말씀 들을지어다\n주의 말씀 들을지어다 주 의 놀라운 주의 말씀\n\n그 때 여호와께서 마른 뼈를 향하여\n생기 불어 넣으시니\n힘줄이 생기고 살이 붙어서 마른 뼈가 살아났네\n\n이에 에스겔 주가 하신 말씀을 대신하여 말할 때에\n뼈가 소리내고 움직여 서로 연결되었네\n너희 마른뼈들아 주의 말씀 들을지어다\n주의 말씀 들을지어다 주의 놀라운 주의 말씀\n\n발가락의 뼈가 붙어 발뼈\n발뼈가 연결되어 발목뼈\n발목뼈가 연결되어 다리\n다리뼈가 연결되어 무릎\n무릎뼈가 연결되어 허벅지\n허벅지가 연결되어 엉덩이\n엉덩이뼈가 연결되어 등뼈\n등뼈가 연결되어 어깨뼈\n어깨뼈가 연결되어 목뼈\n목뼈가 연결되어 머리뼈\n놀라운 주의 말씀\n\n할렐루 영광 할렐루야 할렐루 영광 할렐루야\n(그 때 생기 불어 넣으니 그 뼈들이 다시 살아나)\n할렐루 영광 할렐루야 놀라운 주 말씀\n(지극히 큰 군대 이루니 놀라운 주의 말씀)\n\n그 때 생기 불어 넣으니 그 뼈들이 다시 살아나\n지극히 큰 군대 이루니 놀라운 주의 말씀\n놀라운 주의 말씀 놀라운 주의 말씀\n놀라운 주의 말씀 놀라운 주의 말씀",
     "media": {
       "full": {
-        "youtube": "https://www.youtube.com/embed/Yp9H0-l6p3Y",
-        "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_full_3.mp3"
+        "youtube": "https://www.youtube.com/embed/7mQ8FPlGJHA?si=RoQemI72LWQIGoYD",
+        "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%A7%88%EB%A5%B8%20%EB%BC%88%EB%93%A4%20-%20%ED%95%A9%EC%B0%BD.mp3"
       },
       "parts": {
-        "soprano": { "youtube": null, "mp3": null },
-        "alto": { "youtube": null, "mp3": null },
-        "tenor": { "youtube": null, "mp3": null },
-        "bass": { "youtube": null, "mp3": null }
+        "soprano": {
+          "youtube": "https://www.youtube.com/embed/dXrVXD4h8AE?si=jD7NU2_HX4gTxrc-",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%A7%88%EB%A5%B8%20%EB%BC%88%EB%93%A4%20-%20%EC%86%8C%ED%94%84%EB%9D%BC%EB%85%B8.mp3"
+        },
+        "alto": {
+          "youtube": "https://www.youtube.com/embed/6XbvbZtuTog?si=5q-V9qTaPPn5-P2P",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%A7%88%EB%A5%B8%20%EB%BC%88%EB%93%A4%20-%20%EC%95%8C%ED%86%A0.mp3"
+        },
+        "tenor": {
+          "youtube": "https://www.youtube.com/embed/7njPUGy9Vjo?si=pmo7d8rDC6WyL4ib",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%A7%88%EB%A5%B8%20%EB%BC%88%EB%93%A4%20-%20%ED%85%8C%EB%84%88.mp3"
+        },
+        "bass": {
+          "youtube": "https://www.youtube.com/embed/ul2MZcfQpcs?si=JksEKd-yV0Puiw5X",
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%A7%88%EB%A5%B8%20%EB%BC%88%EB%93%A4%20-%20%EB%B2%A0%EC%9D%B4%EC%8A%A4.mp3"
+        }
       }
     }
   }
