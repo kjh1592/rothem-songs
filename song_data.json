@@ -1,29 +1,29 @@
 [
   {
     "id": "song-001",
-    "title": "Amazing Grace",
+    "title": "심령이 가난한 자는",
     "lyrics": "기뻐하고 즐거워하라\n하늘에서 너희에게\n너희에게 상이 큼이라\n\n심령이 가난한 자는 복이 있나니\n천국이 그들의 것이요\n애통하는 자는 복이 있나니\n그들이 위로를 받을 것이요\n\n온유한 자는 복이 있나니\n그들이 땅을 기업으로 받을 것이요\n\n의에 주리고 목마른 자 배부를 것이요\n긍휼히 여기는 자 긍휼히 여김을 받을 것이요\n\n마음이 청결한 자는 복이 있나니\n그들이 하나님을 볼 것이요\n\n화평케 하는 자 복이 있나니\n그들이 하나님의 아들이라 일컬음을 받네\n\n의를 위하여 박해받은 자\n천국이 그들의 그들의 것이라\n\n나로 말미암아 너희를 욕하고\n박해하고 거짓으로 너희를 거슬러\n모든 악한 말을 할 때\n너희에게 복이 있나니\n\n기뻐하고 즐거워하라\n하늘에서 너희에 상이 큼이라\n\n심령이 가난한 자 애통하는 자\n온유한 자 의에 주리고 목마른 자\n긍휼히 여기는 자 맘이 청결한 자\n복이 있나니\n\n화평케 하는 자 의를 위해 박해받은 자\n하늘에서 너희에게 하늘에서 너희에게\n하늘에서 너희에게 너희에게 상이 큼이라\n\n아멘 아멘\n아멘 아멘",
     "media": {
       "full": {
-        "youtube": "https://www.youtube.com/embed/Pj1L2x3296M",
-        "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_full.mp3"
+        "youtube": "https://www.youtube.com/embed/5UdweFj6MDU?list=PL-Y7rb7AqD9qXGsz2Ai_jM9bpKeEjPN4U&index=5",
+        "mp3": "https://raw.githubusercontent.com/kjh1592/rothem-songs/main/res/%EC%8B%AC%EB%A0%B9%EC%9D%B4%20%EA%B0%80%EB%82%9C%ED%95%9C%20%EC%9E%90%EB%8A%94%20%ED%95%A9%EC%B0%BD.mp3"
       },
       "parts": {
         "soprano": {
-          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=10&end=20",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_soprano.mp3"
+          "youtube": "https://www.youtube.com/embed/OLpSaw9H0mk?list=PL-Y7rb7AqD9qXGsz2Ai_jM9bpKeEjPN4U&index=4",
+          "mp3": "https://raw.githubusercontent.com/kjh1592/rothem-songs/main/res/%EC%8B%AC%EB%A0%B9%EC%9D%B4%20%EA%B0%80%EB%82%9C%ED%95%9C%20%EC%9E%90%EB%8A%94%20%EC%86%8C%ED%94%84%EB%9D%BC%EB%85%B8.mp3"
         },
         "alto": {
-          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=20&end=30",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_alto.mp3"
+          "youtube": "https://www.youtube.com/embed/q28iFjSFDcI?list=PL-Y7rb7AqD9qXGsz2Ai_jM9bpKeEjPN4U&index=3",
+          "mp3": "https://raw.githubusercontent.com/kjh1592/rothem-songs/main/res/%EC%8B%AC%EB%A0%B9%EC%9D%B4%20%EA%B0%80%EB%82%9C%ED%95%9C%20%EC%9E%90%EB%8A%94%20%EC%95%8C%ED%86%A0.mp3"
         },
         "tenor": {
-          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=30&end=40",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_tenor.mp3"
+          "youtube": "https://www.youtube.com/embed/gFiJJJziOGg?list=PL-Y7rb7AqD9qXGsz2Ai_jM9bpKeEjPN4U&index=2",
+          "mp3": "https://raw.githubusercontent.com/kjh1592/rothem-songs/main/res/%EC%8B%AC%EB%A0%B9%EC%9D%B4%20%EA%B0%80%EB%82%9C%ED%95%9C%20%EC%9E%90%EB%8A%94%20%ED%85%8C%EB%84%88.mp3"
         },
         "bass": {
-          "youtube": "https://www.youtube.com/embed/Pj1L2x3296M?start=40&end=50",
-          "mp3": "https://storage.googleapis.com/test-audio-assets/placeholder_audio_bass.mp3"
+          "youtube": "https://www.youtube.com/embed/uVcTHB_InRk?list=PL-Y7rb7AqD9qXGsz2Ai_jM9bpKeEjPN4U&index=1",
+          "mp3": "https://raw.githubusercontent.com/kjh1592/rothem-songs/main/res/%EC%8B%AC%EB%A0%B9%EC%9D%B4%20%EA%B0%80%EB%82%9C%ED%95%9C%20%EC%9E%90%EB%8A%94%20%EB%B2%A0%EC%9D%B4%EC%8A%A4.mp3"
         }
       }
     }

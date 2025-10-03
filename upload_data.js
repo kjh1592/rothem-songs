@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccountKey.json'); // You need to download this file from your Firebase project
-const data = require('./sample-songs.json');
+const data = require('./song_data.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
