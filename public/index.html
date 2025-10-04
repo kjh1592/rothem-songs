@@ -101,7 +101,7 @@
         </div>
 
         <div id="lyrics-container" class="mdc-card hidden">
-            <button class="mdc-button back-button-large" onclick="showSongList()">
+            <button class="mdc-button back-button-large" onclick="history.back()">
                 <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
                 <span class="mdc-button__label">목록</span>
             </button>
@@ -117,7 +117,7 @@
         </div>
 
         <div id="quiz-container" class="mdc-card hidden">
-             <button class="mdc-button back-button-large" onclick="showLyrics(currentSong.id)">
+             <button class="mdc-button back-button-large" onclick="history.back()">
                 <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
                 <span class="mdc-button__label">가사 보기</span>
             </button>
@@ -131,7 +131,7 @@
         </div>
         
         <div id="guide-container" class="mdc-card hidden">
-            <button class="mdc-button back-button-large" onclick="showSongList()">
+            <button class="mdc-button back-button-large" onclick="history.back()">
                 <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
                 <span class="mdc-button__label">목록</span>
             </button>
@@ -316,6 +316,63 @@
             songListEl.innerHTML = `<li class="mdc-list-item"><span class="mdc-list-item__text">Error: ${error.message}</span></li>`;
         });
 
+    </script>
+    <script>
+        // --- 뒤로 가기 기능 --- //
+
+        let isHandlingPopState = false;
+
+        // 1. 초기 상태 설정: 앱의 첫 화면을 'list'로 지정합니다.
+        history.replaceState({ page: 'list' }, 'Song List');
+
+        // 2. 앞으로 가는 함수들(showLyrics, showQuiz)을 래핑하여 history.pushState를 추가합니다.
+        // isHandlingPopState 플래그를 사용하여, 뒤로가기로 인해 함수가 호출될 때는 state를 추가하지 않습니다.
+        const originalShowLyrics = showLyrics;
+        showLyrics = function(songId) {
+            if (!isHandlingPopState) {
+                history.pushState({ page: 'lyrics', songId: songId }, 'Lyrics');
+            }
+            originalShowLyrics(songId);
+        };
+
+        const originalShowQuiz = showQuiz;
+        showQuiz = function() {
+            if (!isHandlingPopState) {
+                history.pushState({ page: 'quiz', songId: currentSong.id }, 'Quiz');
+            }
+            originalShowQuiz();
+        };
+
+        // 3. popstate 이벤트 리스너: 뒤로 가기 시 화면을 처리합니다.
+        window.addEventListener('popstate', (event) => {
+            isHandlingPopState = true;
+
+            if (event.state === null) {
+                if (confirm('앱을 종료하시겠습니까?')) {
+                    history.back(); // 확인 시, 한 단계 더 뒤로 가서 페이지를 나갑니다.
+                } else {
+                    history.forward(); // 취소 시, 다시 앱 화면으로 돌아옵니다.
+                }
+            } else {
+                switch (event.state.page) {
+                    case 'list':
+                        showView(songListContainer);
+                        break;
+                    case 'lyrics':
+                        originalShowLyrics(event.state.songId);
+                        break;
+                    case 'quiz':
+                        originalShowLyrics(event.state.songId);
+                        originalShowQuiz();
+                        break;
+                    default:
+                        showView(songListContainer);
+                }
+            }
+            
+            // 플래그를 비동기적으로 리셋하여 클릭 이벤트와의 충돌을 방지합니다.
+            setTimeout(() => { isHandlingPopState = false; }, 0);
+        });
     </script>
 </body>
 </html>
