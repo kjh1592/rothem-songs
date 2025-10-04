@@ -275,7 +275,7 @@
                 if (Math.random() < hideRatio && word.trim().length > 2) {
                     const span = document.createElement('span');
                     span.className = 'quiz-hidden';
-                    span.textContent = '·'.repeat(word.length);
+                    span.textContent = 'ㅁ'.repeat(word.length);
                     span.dataset.original = word;
                     span.onclick = () => {
                         span.textContent = span.dataset.original;
