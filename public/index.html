@@ -110,7 +110,7 @@
             <div id="media-player"></div>
             <div id="lyrics-content"></div>
             <div class="mdc-card__actions">
-                <button class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button" onclick="showQuiz()">
+                <button id="start-quiz-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">
                     <span class="mdc-button__label">퀴즈 시작</span>
                 </button>
             </div>
@@ -123,9 +123,9 @@
             </button>
             <h2 id="quiz-title" class="mdc-typography--headline5"></h2>
             <div id="quiz-controls">
-                <button class="mdc-button mdc-button--raised" onclick="startQuiz(1)"><span class="mdc-button__label">1단계</span></button>
-                <button class="mdc-button mdc-button--raised" onclick="startQuiz(2)"><span class="mdc-button__label">2단계</span></button>
-                <button class="mdc-button mdc-button--raised" onclick="startQuiz(3)"><span class="mdc-button__label">3단계</span></button>
+                <button id="quiz-level-1" class="mdc-button mdc-button--raised"><span class="mdc-button__label">1단계</span></button>
+                <button id="quiz-level-2" class="mdc-button mdc-button--raised"><span class="mdc-button__label">2단계</span></button>
+                <button id="quiz-level-3" class="mdc-button mdc-button--raised"><span class="mdc-button__label">3단계</span></button>
             </div>
             <div id="quiz-content"></div>
         </div>
@@ -363,6 +363,12 @@
                 // 플래그를 비동기적으로 리셋하여 클릭 이벤트와의 충돌을 방지합니다.
                 setTimeout(() => { isHandlingPopState = false; }, 0);
             });
+
+            // --- 이벤트 리스너 바인딩 ---
+            document.getElementById('start-quiz-button').addEventListener('click', showQuiz);
+            document.getElementById('quiz-level-1').addEventListener('click', () => startQuiz(1));
+            document.getElementById('quiz-level-2').addEventListener('click', () => startQuiz(2));
+            document.getElementById('quiz-level-3').addEventListener('click', () => startQuiz(3));
         });
     </script>
 </body>
