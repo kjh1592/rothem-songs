@@ -149,229 +149,220 @@
     <script src="/__/firebase/9.6.1/firebase-app-compat.js"></script>
     <script src="/__/firebase/9.6.1/firebase-firestore-compat.js"></script>
     <script src="/__/firebase/9.6.1/firebase-auth-compat.js"></script>
+    <script src="/__/firebase/init.js"></script>
 
     <script>
-        mdc.autoInit();
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyDN_WK-HTomdV4z6uCC02NsfzY5-mCwvjM",
-            authDomain: "rhthem-songs.firebaseapp.com",
-            projectId: "rhthem-songs",
-            storageBucket: "rhthem-songs.firebasestorage.app",
-            messagingSenderId: "918398728725",
-            appId: "1:918398728725:web:2cb70327cad1c24bbbec1c"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        let songs = [];
-        let currentSong = null;
-
-        const songListContainer = document.getElementById('song-list-container');
-        const lyricsContainer = document.getElementById('lyrics-container');
-        const quizContainer = document.getElementById('quiz-container');
-        const guideContainer = document.getElementById('guide-container');
-
-        const lyricsTitle = document.getElementById('lyrics-title');
-        const mediaControls = document.getElementById('media-controls');
-        const mediaPlayer = document.getElementById('media-player');
-        const lyricsContent = document.getElementById('lyrics-content');
-        const quizTitle = document.getElementById('quiz-title');
-        const quizContent = document.getElementById('quiz-content');
-
-        function showView(viewToShow) {
-            [songListContainer, lyricsContainer, quizContainer, guideContainer].forEach(view => {
-                view.classList.add('hidden');
-            });
-            viewToShow.classList.remove('hidden');
-        }
-
-        function showSongList() { showView(songListContainer); }
-        function showGuide() { showView(guideContainer); }
-
-        function showLyrics(songId) {
-            currentSong = songs.find(s => s.id === songId);
-            if (!currentSong) return;
-
-            lyricsTitle.textContent = currentSong.title;
-            lyricsContent.textContent = currentSong.lyrics;
+        document.addEventListener('DOMContentLoaded', function() {
+            mdc.autoInit();
             
-            mediaControls.innerHTML = '';
-            mediaPlayer.innerHTML = '';
-            if (currentSong.media) {
-                const partOrder = ['soprano', 'alto', 'tenor', 'bass'];
-                const partNames = {
-                    soprano: '소프라노',
-                    alto: '알토',
-                    tenor: '테너',
-                    bass: '베이스'
-                };
+            const db = firebase.firestore();
+            const auth = firebase.auth();
 
-                if (currentSong.media.full) {
-                    const row = createMediaControlRow('합창');
-                    if (currentSong.media.full.youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.full.youtube);
-                    if (currentSong.media.full.mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.full.mp3);
-                }
+            let songs = [];
+            let currentSong = null;
 
-                if (currentSong.media.parts) {
-                    partOrder.forEach(part => {
-                        if (currentSong.media.parts[part] && (currentSong.media.parts[part].youtube || currentSong.media.parts[part].mp3)) {
-                            const row = createMediaControlRow(partNames[part] || part);
-                            if (currentSong.media.parts[part].youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.parts[part].youtube);
-                            if (currentSong.media.parts[part].mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.parts[part].mp3);
-                        }
-                    });
-                }
-            }
-            showView(lyricsContainer);
-        }
+            const songListContainer = document.getElementById('song-list-container');
+            const lyricsContainer = document.getElementById('lyrics-container');
+            const quizContainer = document.getElementById('quiz-container');
+            const guideContainer = document.getElementById('guide-container');
 
-        function createMediaControlRow(labelText) {
-            const row = document.createElement('div');
-            row.className = 'media-control-row';
-            const label = document.createElement('span');
-            label.className = 'label';
-            label.textContent = labelText;
-            row.appendChild(label);
-            mediaControls.appendChild(row);
-            return row;
-        }
-        
-        function addMediaButton(container, label, type, url) {
-            const button = document.createElement('button');
-            button.className = 'mdc-button mdc-button--raised';
-            button.innerHTML = `<span class="mdc-button__label">${label}</span>`;
-            button.onclick = () => {
-                mediaPlayer.innerHTML = '';
-                if (type === 'youtube') {
-                    mediaPlayer.innerHTML = `<iframe width="100%" height="300" src="${url}" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>`;
-                } else if (type === 'mp3') {
-                    mediaPlayer.innerHTML = `<audio controls src="${url}" style="width: 100%;">Your browser does not support the audio element.</audio>`;
-                }
-            };
-            container.appendChild(button);
-        }
+            const lyricsTitle = document.getElementById('lyrics-title');
+            const mediaControls = document.getElementById('media-controls');
+            const mediaPlayer = document.getElementById('media-player');
+            const lyricsContent = document.getElementById('lyrics-content');
+            const quizTitle = document.getElementById('quiz-title');
+            const quizContent = document.getElementById('quiz-content');
 
-        function showQuiz() {
-            if (!currentSong) return;
-            quizTitle.textContent = `${currentSong.title} - 퀴즈`;
-            quizContent.innerHTML = '단계를 선택하세요.';
-            showView(quizContainer);
-        }
-
-        function startQuiz(level) {
-            if (!currentSong) return;
-            const lyrics = currentSong.lyrics;
-            const words = lyrics.split(/(\s+)/);
-            let hideRatio = 0;
-            if (level === 1) hideRatio = 0.1;
-            if (level === 2) hideRatio = 0.3;
-            if (level === 3) hideRatio = 0.6;
-
-            quizContent.innerHTML = '';
-            words.forEach(word => {
-                if (Math.random() < hideRatio && word.trim().length > 2) {
-                    const span = document.createElement('span');
-                    span.className = 'quiz-hidden';
-                    span.textContent = 'ㅇ'.repeat(word.length);
-                    span.dataset.original = word;
-                    span.onclick = () => {
-                        span.textContent = span.dataset.original;
-                        span.classList.remove('quiz-hidden');
-                    };
-                    quizContent.appendChild(span);
-                } else {
-                    quizContent.appendChild(document.createTextNode(word));
-                }
-            });
-        }
-
-        auth.signInAnonymously().then(() => {
-            db.collection("songs").onSnapshot((querySnapshot) => {
-                const songListEl = document.getElementById("song-list");
-                songListEl.innerHTML = "";
-                songs = [];
-                querySnapshot.forEach((doc) => {
-                    const song = { id: doc.id, ...doc.data() };
-                    songs.push(song);
-                    const listItem = document.createElement('li');
-                    listItem.className = "song-list-item";
-                    listItem.setAttribute('data-mdc-auto-init', 'MDCRipple');
-                    listItem.innerHTML = `
-                        <i class="material-icons icon" aria-hidden="true">music_note</i>
-                        <div class="info">
-                            <span class="title">${song.title}</span>
-                        </div>
-                        <i class="material-icons" aria-hidden="true">chevron_right</i>
-                    `;
-                    listItem.onclick = () => showLyrics(song.id);
-                    songListEl.appendChild(listItem);
+            function showView(viewToShow) {
+                [songListContainer, lyricsContainer, quizContainer, guideContainer].forEach(view => {
+                    view.classList.add('hidden');
                 });
-            });
-        }).catch((error) => {
-            console.error("Authentication failed:", error);
-            const songListEl = document.getElementById("song-list");
-            songListEl.innerHTML = `<li class="mdc-list-item"><span class="mdc-list-item__text">Error: ${error.message}</span></li>`;
-        });
-
-    </script>
-    <script>
-        // --- 뒤로 가기 기능 --- //
-
-        let isHandlingPopState = false;
-
-        // 1. 초기 상태 설정: 앱의 첫 화면을 'list'로 지정합니다.
-        history.replaceState({ page: 'list' }, 'Song List');
-
-        // 2. 앞으로 가는 함수들(showLyrics, showQuiz)을 래핑하여 history.pushState를 추가합니다.
-        // isHandlingPopState 플래그를 사용하여, 뒤로가기로 인해 함수가 호출될 때는 state를 추가하지 않습니다.
-        const originalShowLyrics = showLyrics;
-        showLyrics = function(songId) {
-            if (!isHandlingPopState) {
-                history.pushState({ page: 'lyrics', songId: songId }, 'Lyrics');
+                viewToShow.classList.remove('hidden');
             }
-            originalShowLyrics(songId);
-        };
 
-        const originalShowQuiz = showQuiz;
-        showQuiz = function() {
-            if (!isHandlingPopState) {
-                history.pushState({ page: 'quiz', songId: currentSong.id }, 'Quiz');
+            function showSongList() { showView(songListContainer); }
+            function showGuide() { showView(guideContainer); }
+
+            function showLyrics(songId) {
+                currentSong = songs.find(s => s.id === songId);
+                if (!currentSong) return;
+
+                lyricsTitle.textContent = currentSong.title;
+                lyricsContent.textContent = currentSong.lyrics;
+                
+                mediaControls.innerHTML = '';
+                mediaPlayer.innerHTML = '';
+                if (currentSong.media) {
+                    const partOrder = ['soprano', 'alto', 'tenor', 'bass'];
+                    const partNames = {
+                        soprano: '소프라노',
+                        alto: '알토',
+                        tenor: '테너',
+                        bass: '베이스'
+                    };
+
+                    if (currentSong.media.full) {
+                        const row = createMediaControlRow('합창');
+                        if (currentSong.media.full.youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.full.youtube);
+                        if (currentSong.media.full.mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.full.mp3);
+                    }
+
+                    if (currentSong.media.parts) {
+                        partOrder.forEach(part => {
+                            if (currentSong.media.parts[part] && (currentSong.media.parts[part].youtube || currentSong.media.parts[part].mp3)) {
+                                const row = createMediaControlRow(partNames[part] || part);
+                                if (currentSong.media.parts[part].youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.parts[part].youtube);
+                                if (currentSong.media.parts[part].mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.parts[part].mp3);
+                            }
+                        });
+                    }
+                }
+                showView(lyricsContainer);
             }
-            originalShowQuiz();
-        };
 
-        // 3. popstate 이벤트 리스너: 뒤로 가기 시 화면을 처리합니다.
-        window.addEventListener('popstate', (event) => {
-            isHandlingPopState = true;
-
-            if (event.state === null) {
-                if (confirm('앱을 종료하시겠습니까?')) {
-                    history.back(); // 확인 시, 한 단계 더 뒤로 가서 페이지를 나갑니다.
-                } else {
-                    history.forward(); // 취소 시, 다시 앱 화면으로 돌아옵니다.
-                }
-            } else {
-                switch (event.state.page) {
-                    case 'list':
-                        showView(songListContainer);
-                        break;
-                    case 'lyrics':
-                        originalShowLyrics(event.state.songId);
-                        break;
-                    case 'quiz':
-                        originalShowLyrics(event.state.songId);
-                        originalShowQuiz();
-                        break;
-                    default:
-                        showView(songListContainer);
-                }
+            function createMediaControlRow(labelText) {
+                const row = document.createElement('div');
+                row.className = 'media-control-row';
+                const label = document.createElement('span');
+                label.className = 'label';
+                label.textContent = labelText;
+                row.appendChild(label);
+                mediaControls.appendChild(row);
+                return row;
             }
             
-            // 플래그를 비동기적으로 리셋하여 클릭 이벤트와의 충돌을 방지합니다.
-            setTimeout(() => { isHandlingPopState = false; }, 0);
+            function addMediaButton(container, label, type, url) {
+                const button = document.createElement('button');
+                button.className = 'mdc-button mdc-button--raised';
+                button.innerHTML = `<span class="mdc-button__label">${label}</span>`;
+                button.onclick = () => {
+                    mediaPlayer.innerHTML = '';
+                    if (type === 'youtube') {
+                        mediaPlayer.innerHTML = `<iframe width="100%" height="300" src="${url}" frameborder="0" allowfullscreen style="border-radius: 8px;"></iframe>`;
+                    } else if (type === 'mp3') {
+                        mediaPlayer.innerHTML = `<audio controls src="${url}" style="width: 100%;">Your browser does not support the audio element.</audio>`;
+                    }
+                };
+                container.appendChild(button);
+            }
+
+            function showQuiz() {
+                if (!currentSong) return;
+                quizTitle.textContent = `${currentSong.title} - 퀴즈`;
+                quizContent.innerHTML = '단계를 선택하세요.';
+                showView(quizContainer);
+            }
+
+            function startQuiz(level) {
+                if (!currentSong) return;
+                const lyrics = currentSong.lyrics;
+                const words = lyrics.split(/(\s+)/);
+                let hideRatio = 0;
+                if (level === 1) hideRatio = 0.1;
+                if (level === 2) hideRatio = 0.3;
+                if (level === 3) hideRatio = 0.6;
+
+                quizContent.innerHTML = '';
+                words.forEach(word => {
+                    if (Math.random() < hideRatio && word.trim().length > 2) {
+                        const span = document.createElement('span');
+                        span.className = 'quiz-hidden';
+                        span.textContent = 'ㅇ'.repeat(word.length);
+                        span.dataset.original = word;
+                        span.onclick = () => {
+                            span.textContent = span.dataset.original;
+                            span.classList.remove('quiz-hidden');
+                        };
+                        quizContent.appendChild(span);
+                    } else {
+                        quizContent.appendChild(document.createTextNode(word));
+                    }
+                });
+            }
+
+            auth.signInAnonymously().then(() => {
+                db.collection("songs").onSnapshot((querySnapshot) => {
+                    const songListEl = document.getElementById("song-list");
+                    songListEl.innerHTML = "";
+                    songs = [];
+                    querySnapshot.forEach((doc) => {
+                        const song = { id: doc.id, ...doc.data() };
+                        songs.push(song);
+                        const listItem = document.createElement('li');
+                        listItem.className = "song-list-item";
+                        listItem.setAttribute('data-mdc-auto-init', 'MDCRipple');
+                        listItem.innerHTML = `
+                            <i class="material-icons icon" aria-hidden="true">music_note</i>
+                            <div class="info">
+                                <span class="title">${song.title}</span>
+                            </div>
+                            <i class="material-icons" aria-hidden="true">chevron_right</i>
+                        `;
+                        listItem.onclick = () => showLyrics(song.id);
+                        songListEl.appendChild(listItem);
+                    });
+                });
+            }).catch((error) => {
+                console.error("Authentication failed:", error);
+                const songListEl = document.getElementById("song-list");
+                songListEl.innerHTML = `<li class="mdc-list-item"><span class="mdc-list-item__text">Error: ${error.message}</span></li>`;
+            });
+
+            // --- 뒤로 가기 기능 --- //
+
+            let isHandlingPopState = false;
+
+            // 1. 초기 상태 설정: 앱의 첫 화면을 'list'로 지정합니다.
+            history.replaceState({ page: 'list' }, 'Song List');
+
+            // 2. 앞으로 가는 함수들(showLyrics, showQuiz)을 래핑하여 history.pushState를 추가합니다.
+            // isHandlingPopState 플래그를 사용하여, 뒤로가기로 인해 함수가 호출될 때는 state를 추가하지 않습니다.
+            const originalShowLyrics = showLyrics;
+            showLyrics = function(songId) {
+                if (!isHandlingPopState) {
+                    history.pushState({ page: 'lyrics', songId: songId }, 'Lyrics');
+                }
+                originalShowLyrics(songId);
+            };
+
+            const originalShowQuiz = showQuiz;
+            showQuiz = function() {
+                if (!isHandlingPopState) {
+                    history.pushState({ page: 'quiz', songId: currentSong.id }, 'Quiz');
+                }
+                originalShowQuiz();
+            };
+
+            // 3. popstate 이벤트 리스너: 뒤로 가기 시 화면을 처리합니다.
+            window.addEventListener('popstate', (event) => {
+                isHandlingPopState = true;
+
+                if (event.state === null) {
+                    if (confirm('앱을 종료하시겠습니까?')) {
+                        history.back(); // 확인 시, 한 단계 더 뒤로 가서 페이지를 나갑니다.
+                    } else {
+                        history.forward(); // 취소 시, 다시 앱 화면으로 돌아옵니다.
+                    }
+                } else {
+                    switch (event.state.page) {
+                        case 'list':
+                            showView(songListContainer);
+                            break;
+                        case 'lyrics':
+                            originalShowLyrics(event.state.songId);
+                            break;
+                        case 'quiz':
+                            originalShowLyrics(event.state.songId);
+                            originalShowQuiz();
+                            break;
+                        default:
+                            showView(songListContainer);
+                    }
+                }
+                
+                // 플래그를 비동기적으로 리셋하여 클릭 이벤트와의 충돌을 방지합니다.
+                setTimeout(() => { isHandlingPopState = false; }, 0);
+            });
         });
     </script>
 </body>

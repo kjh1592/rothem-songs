@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "rothem-song",
     "public": "public",
     "ignore": [
       "firebase.json",
