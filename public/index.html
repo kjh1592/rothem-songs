@@ -89,14 +89,14 @@
     <header class="mdc-top-app-bar">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                <span class="mdc-top-app-bar__title">로뎀 발표곡 암기 앱</span>
+                <span class="mdc-top-app-bar__title">로뎀 발표곡 연습실</span>
             </section>
         </div>
     </header>
 
     <main class="mdc-top-app-bar--fixed-adjust">
         <div id="song-list-container" class="mdc-card">
-            <h2 class="mdc-typography--headline6" style="margin-bottom: 12px;">찬양 목록</h2>
+            <h2 class="mdc-typography--headline6" style="margin-bottom: 12px;">발표곡 목록</h2>
             <ul id="song-list"></ul>
         </div>
 
@@ -126,6 +126,7 @@
                 <button id="quiz-level-1" class="mdc-button mdc-button--raised"><span class="mdc-button__label">1단계</span></button>
                 <button id="quiz-level-2" class="mdc-button mdc-button--raised"><span class="mdc-button__label">2단계</span></button>
                 <button id="quiz-level-3" class="mdc-button mdc-button--raised"><span class="mdc-button__label">3단계</span></button>
+                <button id="quiz-level-4" class="mdc-button mdc-button--raised"><span class="mdc-button__label">4단계</span></button>
             </div>
             <div id="quiz-content"></div>
         </div>
@@ -261,6 +262,7 @@
                 if (level === 1) hideRatio = 0.1;
                 if (level === 2) hideRatio = 0.3;
                 if (level === 3) hideRatio = 0.6;
+                if (level === 4) hideRatio = 0.8;
 
                 quizContent.innerHTML = '';
                 words.forEach(word => {
@@ -369,6 +371,7 @@
             document.getElementById('quiz-level-1').addEventListener('click', () => startQuiz(1));
             document.getElementById('quiz-level-2').addEventListener('click', () => startQuiz(2));
             document.getElementById('quiz-level-3').addEventListener('click', () => startQuiz(3));
+            document.getElementById('quiz-level-4').addEventListener('click', () => startQuiz(4));
         });
     </script>
 </body>
