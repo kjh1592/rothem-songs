@@ -110,6 +110,9 @@
             <div id="media-player"></div>
             <div id="lyrics-content"></div>
             <div class="mdc-card__actions">
+                <button id="view-pdf-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button" style="display: none;">
+                    <span class="mdc-button__label">악보 보기</span>
+                </button>
                 <button id="start-quiz-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">
                     <span class="mdc-button__label">퀴즈 시작</span>
                 </button>
@@ -144,6 +147,15 @@
                 <li class="mdc-list-item"><span class="mdc-list-item__text">4. 가려진 부분을 클릭하면 정답을 확인할 수 있습니다.</span></li>
             </ul>
         </div>
+
+        <div id="pdf-viewer-container" class="mdc-card hidden">
+            <button class="mdc-button back-button-large" onclick="history.back()">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                <span class="mdc-button__label">가사 보기</span>
+            </button>
+            <h2 id="pdf-title" class="mdc-typography--headline5" style="margin-top: 16px;"></h2>
+            <iframe id="pdf-iframe" style="width: 100%; height: 80vh; border: none;"></iframe>
+        </div>
     </main>
 
     <!-- Firebase SDK -->
@@ -166,6 +178,7 @@
             const lyricsContainer = document.getElementById('lyrics-container');
             const quizContainer = document.getElementById('quiz-container');
             const guideContainer = document.getElementById('guide-container');
+            const pdfViewerContainer = document.getElementById('pdf-viewer-container');
 
             const lyricsTitle = document.getElementById('lyrics-title');
             const mediaControls = document.getElementById('media-controls');
@@ -173,12 +186,14 @@
             const lyricsContent = document.getElementById('lyrics-content');
             const quizTitle = document.getElementById('quiz-title');
             const quizContent = document.getElementById('quiz-content');
+            const pdfTitle = document.getElementById('pdf-title');
+            let pdfIframe = document.getElementById('pdf-iframe');
 
             function showView(viewToShow) {
-                [songListContainer, lyricsContainer, quizContainer, guideContainer].forEach(view => {
-                    view.classList.add('hidden');
+                [songListContainer, lyricsContainer, quizContainer, guideContainer, pdfViewerContainer].forEach(view => {
+                    if (view) view.classList.add('hidden');
                 });
-                viewToShow.classList.remove('hidden');
+                if (viewToShow) viewToShow.classList.remove('hidden');
             }
 
             function showSongList() { showView(songListContainer); }
@@ -190,6 +205,13 @@
 
                 lyricsTitle.textContent = currentSong.title;
                 lyricsContent.textContent = currentSong.lyrics;
+
+                const viewPdfButton = document.getElementById('view-pdf-button');
+                if (currentSong.pdfUrl) {
+                    viewPdfButton.style.display = 'inline-flex';
+                } else {
+                    viewPdfButton.style.display = 'none';
+                }
                 
                 mediaControls.innerHTML = '';
                 mediaPlayer.innerHTML = '';
@@ -252,6 +274,30 @@
                 quizTitle.textContent = `${currentSong.title} - 퀴즈`;
                 quizContent.innerHTML = '단계를 선택하세요.';
                 showView(quizContainer);
+            }
+
+            function showPdfViewer() {
+                if (!currentSong || !currentSong.pdfUrl) return;
+                pdfTitle.textContent = `${currentSong.title} - 악보`;
+
+                const container = document.getElementById('pdf-viewer-container');
+                
+                // Find and remove existing iframe
+                const oldIframe = document.getElementById('pdf-iframe');
+                if (oldIframe) {
+                    oldIframe.parentNode.removeChild(oldIframe);
+                }
+
+                // Create and append new iframe
+                pdfIframe = document.createElement('iframe');
+                pdfIframe.id = 'pdf-iframe';
+                pdfIframe.style.width = '100%';
+                pdfIframe.style.height = '80vh';
+                pdfIframe.style.border = 'none';
+                container.appendChild(pdfIframe);
+
+                pdfIframe.src = `https://docs.google.com/gview?url=${currentSong.pdfUrl}&embedded=true`;
+                showView(pdfViewerContainer);
             }
 
             function startQuiz(level) {
@@ -335,6 +381,14 @@
                 originalShowQuiz();
             };
 
+            const originalShowPdfViewer = showPdfViewer;
+            showPdfViewer = function() {
+                if (!isHandlingPopState) {
+                    history.pushState({ page: 'pdf', songId: currentSong.id }, 'PDF');
+                }
+                originalShowPdfViewer();
+            };
+
             // 3. popstate 이벤트 리스너: 뒤로 가기 시 화면을 처리합니다.
             window.addEventListener('popstate', (event) => {
                 isHandlingPopState = true;
@@ -357,6 +411,10 @@
                             originalShowLyrics(event.state.songId);
                             originalShowQuiz();
                             break;
+                        case 'pdf':
+                            originalShowLyrics(event.state.songId);
+                            originalShowPdfViewer();
+                            break;
                         default:
                             showView(songListContainer);
                     }
@@ -367,6 +425,7 @@
             });
 
             // --- 이벤트 리스너 바인딩 ---
+            document.getElementById('view-pdf-button').addEventListener('click', showPdfViewer);
             document.getElementById('start-quiz-button').addEventListener('click', showQuiz);
             document.getElementById('quiz-level-1').addEventListener('click', () => startQuiz(1));
             document.getElementById('quiz-level-2').addEventListener('click', () => startQuiz(2));
