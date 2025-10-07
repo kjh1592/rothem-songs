@@ -200,8 +200,11 @@
             function showGuide() { showView(guideContainer); }
 
             function showLyrics(songId) {
-                currentSong = songs.find(s => s.id === songId);
-                if (!currentSong) return;
+                const newSong = songs.find(s => s.id === songId);
+                if (!newSong) return;
+
+                const songChanged = !currentSong || currentSong.id !== songId;
+                currentSong = newSong;
 
                 lyricsTitle.textContent = currentSong.title;
                 lyricsContent.textContent = currentSong.lyrics;
@@ -213,31 +216,33 @@
                     viewPdfButton.style.display = 'none';
                 }
                 
-                mediaControls.innerHTML = '';
-                mediaPlayer.innerHTML = '';
-                if (currentSong.media) {
-                    const partOrder = ['soprano', 'alto', 'tenor', 'bass'];
-                    const partNames = {
-                        soprano: '소프라노',
-                        alto: '알토',
-                        tenor: '테너',
-                        bass: '베이스'
-                    };
+                if (songChanged) {
+                    mediaControls.innerHTML = '';
+                    mediaPlayer.innerHTML = '';
+                    if (currentSong.media) {
+                        const partOrder = ['soprano', 'alto', 'tenor', 'bass'];
+                        const partNames = {
+                            soprano: '소프라노',
+                            alto: '알토',
+                            tenor: '테너',
+                            bass: '베이스'
+                        };
 
-                    if (currentSong.media.full) {
-                        const row = createMediaControlRow('합창');
-                        if (currentSong.media.full.youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.full.youtube);
-                        if (currentSong.media.full.mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.full.mp3);
-                    }
+                        if (currentSong.media.full) {
+                            const row = createMediaControlRow('합창');
+                            if (currentSong.media.full.youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.full.youtube);
+                            if (currentSong.media.full.mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.full.mp3);
+                        }
 
-                    if (currentSong.media.parts) {
-                        partOrder.forEach(part => {
-                            if (currentSong.media.parts[part] && (currentSong.media.parts[part].youtube || currentSong.media.parts[part].mp3)) {
-                                const row = createMediaControlRow(partNames[part] || part);
-                                if (currentSong.media.parts[part].youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.parts[part].youtube);
-                                if (currentSong.media.parts[part].mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.parts[part].mp3);
-                            }
-                        });
+                        if (currentSong.media.parts) {
+                            partOrder.forEach(part => {
+                                if (currentSong.media.parts[part] && (currentSong.media.parts[part].youtube || currentSong.media.parts[part].mp3)) {
+                                    const row = createMediaControlRow(partNames[part] || part);
+                                    if (currentSong.media.parts[part].youtube) addMediaButton(row, 'YouTube', 'youtube', currentSong.media.parts[part].youtube);
+                                    if (currentSong.media.parts[part].mp3) addMediaButton(row, 'MP3', 'mp3', currentSong.media.parts[part].mp3);
+                                }
+                            });
+                        }
                     }
                 }
                 showView(lyricsContainer);
@@ -403,6 +408,9 @@
                     switch (event.state.page) {
                         case 'list':
                             showView(songListContainer);
+                            mediaPlayer.innerHTML = '';
+                            mediaControls.innerHTML = '';
+                            currentSong = null;
                             break;
                         case 'lyrics':
                             originalShowLyrics(event.state.songId);
