@@ -82,6 +82,111 @@
             padding: 0 24px !important;
             --mdc-typography-button-font-size: 1.25rem;
         }
+
+        /* Game Styles */
+        #game-container {
+            position: relative;
+            height: 85vh;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+        #game-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: #f5f5f5;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        #word-area {
+            position: relative;
+            height: calc(100% - 120px);
+            width: 100%;
+        }
+        .falling-word {
+            position: absolute;
+            padding: 8px 12px;
+            background-color: var(--mdc-theme-primary);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 1.1em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s ease-out;
+        }
+        .falling-word:hover {
+            transform: scale(1.1);
+        }
+        #answer-area {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            min-height: 60px;
+            background: #f5f5f5;
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--text-primary-on-background);
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+        .answer-blank {
+            display: inline-block;
+            margin: 0 4px;
+            padding: 0 8px;
+            color: #bdbdbd;
+            border-bottom: 2px solid #bdbdbd;
+            min-width: 30px;
+            text-align: center;
+        }
+        .answer-filled {
+            color: var(--text-primary-on-background);
+            border-bottom: 2px solid var(--mdc-theme-primary);
+        }
+
+        @keyframes fall {
+            from { top: -40px; transform: rotate(0deg); }
+            to { top: 100%; transform: rotate(0deg); }
+        }
+        .correct-click-anim {
+            animation: correct-pulse 0.3s;
+        }
+        @keyframes correct-pulse {
+            0% { transform: scale(1); background-color: #4CAF50; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); background-color: var(--mdc-theme-primary); }
+        }
+        .incorrect-click-anim {
+            animation: incorrect-shake 0.4s;
+        }
+        @keyframes incorrect-shake {
+            0%, 100% { transform: translateX(0); background-color: #F44336; }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        #game-result-container .result-message {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--mdc-theme-primary);
+        }
+        #game-result-container #final-lyrics {
+            white-space: pre-wrap;
+            line-height: 1.8;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body class="mdc-typography">
@@ -116,6 +221,9 @@
                 <button id="start-quiz-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">
                     <span class="mdc-button__label">퀴즈 시작</span>
                 </button>
+                <button id="start-game-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">
+                    <span class="mdc-button__label">게임 시작</span>
+                </button>
             </div>
         </div>
 
@@ -132,6 +240,37 @@
                 <button id="quiz-level-4" class="mdc-button mdc-button--raised"><span class="mdc-button__label">4단계</span></button>
             </div>
             <div id="quiz-content"></div>
+        </div>
+
+        <div id="game-container" class="mdc-card hidden">
+            <button class="mdc-button back-button-large" onclick="history.back()">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                <span class="mdc-button__label">가사 보기</span>
+            </button>
+            <h2 id="game-title" class="mdc-typography--headline5"></h2>
+            <div id="game-header">
+                <span>시간: <span id="timer">0</span>s</span>
+                <span>점수: <span id="score">0</span></span>
+                <span>최고점수: <span id="high-score">0</span></span>
+            </div>
+            <div id="word-area"></div>
+            <div id="answer-area"></div>
+        </div>
+
+        <div id="game-result-container" class="mdc-card hidden">
+            <button class="mdc-button back-button-large" onclick="history.back()">
+                <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_back</i>
+                <span class="mdc-button__label">목록</span>
+            </button>
+            <h2 class="mdc-typography--headline5">게임 결과</h2>
+            <div class="result-message" id="final-message"></div>
+            <p><strong>획득 점수:</strong> <span id="final-score"></span></p>
+            <p><strong>시간 감점:</strong> <span id="time-penalty"></span></p>
+            <p><strong>최종 점수:</strong> <span id="adjusted-score"></span></p>
+            <p><strong>최고 점수:</strong> <span id="final-high-score"></span></p>
+            <p><strong>소요 시간:</strong> <span id="final-time"></span></p>
+            <h3 class="mdc-typography--headline6" style="margin-top: 24px;">전체 가사</h3>
+            <div id="final-lyrics"></div>
         </div>
         
         <div id="guide-container" class="mdc-card hidden">
@@ -179,6 +318,8 @@
             const quizContainer = document.getElementById('quiz-container');
             const guideContainer = document.getElementById('guide-container');
             const pdfViewerContainer = document.getElementById('pdf-viewer-container');
+            const gameContainer = document.getElementById('game-container');
+            const gameResultContainer = document.getElementById('game-result-container');
 
             const lyricsTitle = document.getElementById('lyrics-title');
             const mediaControls = document.getElementById('media-controls');
@@ -189,8 +330,31 @@
             const pdfTitle = document.getElementById('pdf-title');
             let pdfIframe = document.getElementById('pdf-iframe');
 
+            // Game elements
+            const gameTitle = document.getElementById('game-title');
+            const timerEl = document.getElementById('timer');
+            const scoreEl = document.getElementById('score');
+            const highScoreEl = document.getElementById('high-score');
+            const wordArea = document.getElementById('word-area');
+            const answerArea = document.getElementById('answer-area');
+
+            // Sound effects
+            const correctSound = document.getElementById('correct-sound');
+            const incorrectSound = document.getElementById('incorrect-sound');
+            const successSound = document.getElementById('success-sound');
+
+            function playSound(sound) {
+                sound.currentTime = 0;
+                sound.play();
+            }
+
+            let gameState = {};
+            let timerInterval;
+            let wordDropperInterval;
+            let highScore = 0;
+
             function showView(viewToShow) {
-                [songListContainer, lyricsContainer, quizContainer, guideContainer, pdfViewerContainer].forEach(view => {
+                [songListContainer, lyricsContainer, quizContainer, guideContainer, pdfViewerContainer, gameContainer, gameResultContainer].forEach(view => {
                     if (view) view.classList.add('hidden');
                 });
                 if (viewToShow) viewToShow.classList.remove('hidden');
@@ -221,12 +385,7 @@
                     mediaPlayer.innerHTML = '';
                     if (currentSong.media) {
                         const partOrder = ['soprano', 'alto', 'tenor', 'bass'];
-                        const partNames = {
-                            soprano: '소프라노',
-                            alto: '알토',
-                            tenor: '테너',
-                            bass: '베이스'
-                        };
+                        const partNames = { soprano: '소프라노', alto: '알토', tenor: '테너', bass: '베이스' };
 
                         if (currentSong.media.full) {
                             const row = createMediaControlRow('합창');
@@ -284,23 +443,15 @@
             function showPdfViewer() {
                 if (!currentSong || !currentSong.pdfUrl) return;
                 pdfTitle.textContent = `${currentSong.title} - 악보`;
-
                 const container = document.getElementById('pdf-viewer-container');
-                
-                // Find and remove existing iframe
                 const oldIframe = document.getElementById('pdf-iframe');
-                if (oldIframe) {
-                    oldIframe.parentNode.removeChild(oldIframe);
-                }
-
-                // Create and append new iframe
+                if (oldIframe) oldIframe.parentNode.removeChild(oldIframe);
                 pdfIframe = document.createElement('iframe');
                 pdfIframe.id = 'pdf-iframe';
                 pdfIframe.style.width = '100%';
                 pdfIframe.style.height = '80vh';
                 pdfIframe.style.border = 'none';
                 container.appendChild(pdfIframe);
-
                 pdfIframe.src = `https://docs.google.com/gview?url=${currentSong.pdfUrl}&embedded=true`;
                 showView(pdfViewerContainer);
             }
@@ -333,6 +484,169 @@
                 });
             }
 
+            // --- Game Logic ---
+            function showGame() {
+                if (!currentSong) return;
+                gameTitle.textContent = `${currentSong.title} - 게임`;
+                startGame();
+                showView(gameContainer);
+            }
+
+            function startGame() {
+                clearInterval(timerInterval);
+                clearInterval(wordDropperInterval);
+                wordArea.innerHTML = '';
+
+                const lyricsParagraphs = currentSong.lyrics.split('\n\n').filter(p => p.trim() !== '');
+                
+                gameState = {
+                    score: 0,
+                    time: 0,
+                    paragraphs: lyricsParagraphs,
+                    currentParagraphIndex: 0,
+                    currentWordIndex: 0,
+                    totalWords: lyricsParagraphs.reduce((acc, p) => acc + p.split(/\s+/).filter(w => w).length, 0),
+                    currentParagraphWords: [],
+                    wordsToGuess: []
+                };
+
+                scoreEl.textContent = '0';
+                timerEl.textContent = '0';
+                highScore = localStorage.getItem('highScore') || 0;
+                highScoreEl.textContent = highScore;
+                
+                timerInterval = setInterval(() => {
+                    gameState.time++;
+                    timerEl.textContent = gameState.time;
+                }, 1000);
+
+                wordDropperInterval = setInterval(dropWord, 1000); // Drop a new word every 1 seconds
+
+                loadNextParagraph();
+            }
+
+            function dropWord() {
+                if (gameState.wordsToGuess.length === 0) return;
+
+                const wordIndex = Math.floor(Math.random() * gameState.wordsToGuess.length);
+                const word = gameState.wordsToGuess[wordIndex];
+                gameState.wordsToGuess.splice(wordIndex, 1); // Remove word from list
+
+                const wordEl = document.createElement('div');
+                wordEl.textContent = word;
+                wordEl.className = 'falling-word';
+                wordEl.style.left = `${Math.random() * 90}%`;
+                wordEl.style.animation = `fall ${8 + Math.random() * 6}s linear forwards`;
+                
+                wordEl.addEventListener('click', handleWordClick);
+                wordEl.addEventListener('animationend', () => {
+                    if (wordEl.parentNode) {
+                        wordEl.parentNode.removeChild(wordEl);
+                        gameState.wordsToGuess.push(word); // Add word back if not clicked
+                    }
+                });
+
+                wordArea.appendChild(wordEl);
+            }
+
+            function loadNextParagraph() {
+                if (gameState.currentParagraphIndex >= gameState.paragraphs.length) {
+                    endGame();
+                    return;
+                }
+
+                answerArea.innerHTML = '';
+                gameState.currentWordIndex = 0;
+
+                const currentParagraph = gameState.paragraphs[gameState.currentParagraphIndex];
+                const words = currentParagraph.split(/\s+/).filter(word => word.trim() !== '');
+                gameState.currentParagraphWords = words;
+                gameState.wordsToGuess = [...words];
+
+                words.forEach(word => {
+                    const blank = document.createElement('span');
+                    blank.className = 'answer-blank';
+                    blank.textContent = "_".repeat(word.length);
+                    answerArea.appendChild(blank);
+                    answerArea.appendChild(document.createTextNode(' ')); // Add space between blanks
+                });
+            }
+
+            function handleWordClick(e) {
+                const clickedWordEl = e.target;
+                const clickedWord = clickedWordEl.textContent;
+                const currentParagraph = gameState.paragraphs[gameState.currentParagraphIndex];
+                const words = currentParagraph.split(/\s+/).filter(word => word.trim() !== '');
+                const expectedWord = words[gameState.currentWordIndex];
+
+                if (clickedWord === expectedWord) {
+                    playSound(correctSound);
+                    clickedWordEl.classList.add('correct-click-anim');
+                    
+                    setTimeout(() => {
+                        if(clickedWordEl.parentNode) wordArea.removeChild(clickedWordEl);
+                    }, 300);
+
+                    const blanks = answerArea.getElementsByClassName('answer-blank');
+                    if (blanks[gameState.currentWordIndex]) {
+                        blanks[gameState.currentWordIndex].textContent = expectedWord;
+                        blanks[gameState.currentWordIndex].classList.add('answer-filled');
+                    }
+
+                    gameState.score += 10;
+                    gameState.currentWordIndex++;
+
+                    if (gameState.currentWordIndex >= words.length) {
+                        gameState.currentParagraphIndex++;
+                        setTimeout(loadNextParagraph, 1000);
+                    }
+                } else {
+                    playSound(incorrectSound);
+                    gameState.score = Math.max(0, gameState.score - 5);
+                    clickedWordEl.classList.add('incorrect-click-anim');
+                    setTimeout(() => clickedWordEl.classList.remove('incorrect-click-anim'), 400);
+                }
+                scoreEl.textContent = gameState.score;
+            }
+
+            function endGame() {
+                clearInterval(timerInterval);
+                clearInterval(wordDropperInterval);
+                playSound(successSound);
+
+                const score = gameState.score;
+                const totalWords = gameState.totalWords;
+                const standardTime = totalWords * 3;
+                const timePenalty = Math.max(0, gameState.time - standardTime);
+                const adjustedScore = Math.max(0, score - timePenalty);
+
+                const percentage = totalWords > 0 ? (score / (totalWords * 10)) * 100 : 0;
+                let message = '';
+
+                if (percentage < 70) {
+                    message = "노력이 좀 더 필요해요...";
+                } else if (percentage < 90) {
+                    message = "좋아요, 수고하셨어요.";
+                } else {
+                    message = "최고에요, 이제 실전만 남았네요!";
+                }
+
+                if (adjustedScore > highScore) {
+                    highScore = adjustedScore;
+                    localStorage.setItem('highScore', highScore);
+                }
+
+                document.getElementById('final-message').textContent = message;
+                document.getElementById('final-score').textContent = score;
+                document.getElementById('time-penalty').textContent = `-${timePenalty}`;
+                document.getElementById('adjusted-score').textContent = adjustedScore;
+                document.getElementById('final-high-score').textContent = highScore;
+                document.getElementById('final-time').textContent = `${gameState.time}초`;
+                document.getElementById('final-lyrics').textContent = currentSong.lyrics;
+
+                showView(gameResultContainer);
+            }
+
             auth.signInAnonymously().then(() => {
                 db.collection("songs").onSnapshot((querySnapshot) => {
                     const songListEl = document.getElementById("song-list");
@@ -361,15 +675,10 @@
                 songListEl.innerHTML = `<li class="mdc-list-item"><span class="mdc-list-item__text">Error: ${error.message}</span></li>`;
             });
 
-            // --- 뒤로 가기 기능 --- //
-
+            // --- History and Navigation ---
             let isHandlingPopState = false;
-
-            // 1. 초기 상태 설정: 앱의 첫 화면을 'list'로 지정합니다.
             history.replaceState({ page: 'list' }, 'Song List');
 
-            // 2. 앞으로 가는 함수들(showLyrics, showQuiz)을 래핑하여 history.pushState를 추가합니다.
-            // isHandlingPopState 플래그를 사용하여, 뒤로가기로 인해 함수가 호출될 때는 state를 추가하지 않습니다.
             const originalShowLyrics = showLyrics;
             showLyrics = function(songId) {
                 if (!isHandlingPopState) {
@@ -393,24 +702,26 @@
                 }
                 originalShowPdfViewer();
             };
+            
+            const originalShowGame = showGame;
+            showGame = function() {
+                if (!isHandlingPopState) {
+                    history.pushState({ page: 'game', songId: currentSong.id }, 'Game');
+                }
+                originalShowGame();
+            };
 
-            // 3. popstate 이벤트 리스너: 뒤로 가기 시 화면을 처리합니다.
             window.addEventListener('popstate', (event) => {
                 isHandlingPopState = true;
-
-                if (event.state === null) {
-                    if (confirm('앱을 종료하시겠습니까?')) {
-                        history.back(); // 확인 시, 한 단계 더 뒤로 가서 페이지를 나갑니다.
-                    } else {
-                        history.forward(); // 취소 시, 다시 앱 화면으로 돌아옵니다.
-                    }
-                } else {
+                if (event.state) {
                     switch (event.state.page) {
                         case 'list':
                             showView(songListContainer);
                             mediaPlayer.innerHTML = '';
                             mediaControls.innerHTML = '';
                             currentSong = null;
+                            clearInterval(timerInterval);
+                            clearInterval(wordDropperInterval);
                             break;
                         case 'lyrics':
                             originalShowLyrics(event.state.songId);
@@ -423,23 +734,29 @@
                             originalShowLyrics(event.state.songId);
                             originalShowPdfViewer();
                             break;
+                        case 'game':
+                            originalShowLyrics(event.state.songId);
+                            originalShowGame();
+                            break;
                         default:
                             showView(songListContainer);
                     }
                 }
-                
-                // 플래그를 비동기적으로 리셋하여 클릭 이벤트와의 충돌을 방지합니다.
                 setTimeout(() => { isHandlingPopState = false; }, 0);
             });
 
-            // --- 이벤트 리스너 바인딩 ---
+            // --- Event Listeners ---
             document.getElementById('view-pdf-button').addEventListener('click', showPdfViewer);
             document.getElementById('start-quiz-button').addEventListener('click', showQuiz);
+            document.getElementById('start-game-button').addEventListener('click', showGame);
             document.getElementById('quiz-level-1').addEventListener('click', () => startQuiz(1));
             document.getElementById('quiz-level-2').addEventListener('click', () => startQuiz(2));
             document.getElementById('quiz-level-3').addEventListener('click', () => startQuiz(3));
             document.getElementById('quiz-level-4').addEventListener('click', () => startQuiz(4));
         });
     </script>
+    <audio id="correct-sound" src="res/correct.mp3" preload="auto"></audio>
+    <audio id="incorrect-sound" src="res/incorrect.mp3" preload="auto"></audio>
+    <audio id="success-sound" src="res/success.mp3" preload="auto"></audio>
 </body>
 </html>
