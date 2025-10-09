@@ -616,7 +616,7 @@
 
                 const score = gameState.score;
                 const totalWords = gameState.totalWords;
-                const standardTime = totalWords * 3;
+                const standardTime = totalWords * 2;
                 const timePenalty = Math.max(0, gameState.time - standardTime);
                 const adjustedScore = Math.max(0, score - timePenalty);
 
