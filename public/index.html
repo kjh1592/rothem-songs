@@ -196,6 +196,9 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
                 <span class="mdc-top-app-bar__title">로뎀 발표곡 연습실</span>
             </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" style="padding-right: 16px;">
+                <span id="d-day" style="font-size: 1.2em; font-weight: bold; color: white;"></span>
+            </section>
         </div>
     </header>
 
@@ -306,6 +309,27 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             mdc.autoInit();
+
+            // D-Day calculation
+            const dDayElement = document.getElementById('d-day');
+            if (dDayElement) {
+                const dDay = new Date('2025-12-14');
+                const today = new Date();
+                // Reset time part to compare dates only
+                dDay.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                
+                const diffTime = dDay.getTime() - today.getTime();
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                if (diffDays > 0) {
+                    dDayElement.textContent = `D-${diffDays}`;
+                } else if (diffDays === 0) {
+                    dDayElement.textContent = 'D-Day';
+                } else {
+                    dDayElement.textContent = `D+${Math.abs(diffDays)}`;
+                }
+            }
             
             const db = firebase.firestore();
             const auth = firebase.auth();
