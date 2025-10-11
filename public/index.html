@@ -61,6 +61,9 @@
             color: var(--text-primary-on-background);
             font-size: 1.2em;
         }
+        #lyrics-actions .mdc-button {
+            margin-right: 8px;
+        }
         .quiz-hidden { color: var(--mdc-theme-primary); cursor: pointer; font-weight: bold; }
         .mdc-button--raised { background-color: var(--mdc-theme-primary); }
         #media-player { margin-top: 16px; }
@@ -216,18 +219,18 @@
             <h2 id="lyrics-title" class="mdc-typography--headline5" style="margin-top: 16px;"></h2>
             <div id="media-controls"></div>
             <div id="media-player"></div>
-            <div id="lyrics-content"></div>
-            <div class="mdc-card__actions">
-                <button id="view-pdf-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button" style="display: none;">
+            <div id="lyrics-actions" style="margin-bottom: 8px;">
+                <button id="view-pdf-button" class="mdc-button mdc-button--raised" style="display: none;">
                     <span class="mdc-button__label">악보 보기</span>
                 </button>
-                <button id="start-quiz-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">
+                <button id="start-quiz-button" class="mdc-button mdc-button--raised">
                     <span class="mdc-button__label">퀴즈 시작</span>
                 </button>
-                <button id="start-game-button" class="mdc-button mdc-button--raised mdc-card__action mdc-card__action--button">
+                <button id="start-game-button" class="mdc-button mdc-button--raised">
                     <span class="mdc-button__label">게임 시작</span>
                 </button>
             </div>
+            <div id="lyrics-content" style="margin-top: 4px;"></div>
         </div>
 
         <div id="quiz-container" class="mdc-card hidden">
