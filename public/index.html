@@ -206,8 +206,13 @@
     </header>
 
     <main class="mdc-top-app-bar--fixed-adjust">
+        <div id="announcement-container" class="mdc-card">
+            <h2 class="mdc-typography--headline6" style="margin-bottom: 4px;">공지 사항</h2>
+            <p id="announcement-content" style="white-space: pre-wrap;"></p>
+        </div>
+
         <div id="song-list-container" class="mdc-card">
-            <h2 class="mdc-typography--headline6" style="margin-bottom: 12px;">발표곡 목록</h2>
+            <h2 class="mdc-typography--headline6" style="margin-bottom: 4px;">발표곡 목록</h2>
             <ul id="song-list"></ul>
         </div>
 
@@ -301,6 +306,65 @@
             <h2 id="pdf-title" class="mdc-typography--headline5" style="margin-top: 16px;"></h2>
             <iframe id="pdf-iframe" style="width: 100%; height: 80vh; border: none;"></iframe>
         </div>
+
+        <!-- Dialogs -->
+        <div id="password-dialog" class="mdc-dialog">
+            <div class="mdc-dialog__container">
+                <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="password-dialog-title">
+                    <h2 class="mdc-dialog__title" id="password-dialog-title">관리자 비밀번호</h2>
+                    <div class="mdc-dialog__content">
+                        <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                            <input type="password" id="password-input" class="mdc-text-field__input">
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="password-input" class="mdc-floating-label">비밀번호</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mdc-dialog__actions">
+                        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+                            <span class="mdc-button__label">취소</span>
+                        </button>
+                        <button type="button" id="submit-password-button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
+                            <span class="mdc-button__label">확인</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
+        </div>
+
+        <div id="announcement-dialog" class="mdc-dialog">
+            <div class="mdc-dialog__container">
+                <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="announcement-dialog-title">
+                    <h2 class="mdc-dialog__title" id="announcement-dialog-title">공지사항 수정</h2>
+                    <div class="mdc-dialog__content">
+                        <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                            <textarea id="announcement-input" class="mdc-text-field__input" rows="8"></textarea>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="announcement-input" class="mdc-floating-label">공지 내용</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mdc-dialog__actions">
+                        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+                            <span class="mdc-button__label">취소</span>
+                        </button>
+                        <button type="button" id="save-announcement-button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
+                            <span class="mdc-button__label">저장</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="mdc-dialog__scrim"></div>
+        </div>
     </main>
 
     <!-- Firebase SDK -->
@@ -313,12 +377,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             mdc.autoInit();
 
-            // D-Day calculation
             const dDayElement = document.getElementById('d-day');
             if (dDayElement) {
                 const dDay = new Date('2025-12-14');
                 const today = new Date();
-                // Reset time part to compare dates only
                 dDay.setHours(0, 0, 0, 0);
                 today.setHours(0, 0, 0, 0);
                 
@@ -347,6 +409,8 @@
             const pdfViewerContainer = document.getElementById('pdf-viewer-container');
             const gameContainer = document.getElementById('game-container');
             const gameResultContainer = document.getElementById('game-result-container');
+            const announcementContainer = document.getElementById('announcement-container');
+            const announcementContent = document.getElementById('announcement-content');
 
             const lyricsTitle = document.getElementById('lyrics-title');
             const mediaControls = document.getElementById('media-controls');
@@ -356,6 +420,12 @@
             const quizContent = document.getElementById('quiz-content');
             const pdfTitle = document.getElementById('pdf-title');
             let pdfIframe = document.getElementById('pdf-iframe');
+
+            // Dialogs
+            const passwordDialog = new mdc.dialog.MDCDialog(document.getElementById('password-dialog'));
+            const announcementDialog = new mdc.dialog.MDCDialog(document.getElementById('announcement-dialog'));
+            const passwordInput = document.getElementById('password-input');
+            const announcementInput = document.getElementById('announcement-input');
 
             // Game elements
             const gameTitle = document.getElementById('game-title');
@@ -381,10 +451,13 @@
             let highScore = 0;
 
             function showView(viewToShow) {
-                [songListContainer, lyricsContainer, quizContainer, guideContainer, pdfViewerContainer, gameContainer, gameResultContainer].forEach(view => {
+                [songListContainer, lyricsContainer, quizContainer, guideContainer, pdfViewerContainer, gameContainer, gameResultContainer, announcementContainer].forEach(view => {
                     if (view) view.classList.add('hidden');
                 });
-                if (viewToShow) viewToShow.classList.remove('hidden');
+                if (viewToShow) {
+                    viewToShow.classList.remove('hidden');
+                    if(viewToShow === songListContainer) announcementContainer.classList.remove('hidden');
+                }
             }
 
             function showSongList() { showView(songListContainer); }
@@ -674,7 +747,40 @@
                 showView(gameResultContainer);
             }
 
+            // --- Announcement Logic ---
+            dDayElement.addEventListener('click', () => {
+                passwordInput.value = '';
+                passwordDialog.open();
+            });
+
+            document.getElementById('submit-password-button').addEventListener('click', () => {
+                const enteredPassword = passwordInput.value;
+                db.collection('config').doc('admin').get().then(doc => {
+                    if (doc.exists && doc.data().password === enteredPassword) {
+                        announcementDialog.open();
+                    } else {
+                        alert('비밀번호가 틀렸습니다.');
+                    }
+                }).catch(error => {
+                    console.error("Error getting password:", error);
+                    alert('비밀번호 확인 중 오류가 발생했습니다.');
+                });
+            });
+
+            document.getElementById('save-announcement-button').addEventListener('click', () => {
+                const newAnnouncement = announcementInput.value;
+                db.collection('announcements').doc('latest').set({
+                    content: newAnnouncement,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                }).then(() => {
+                    console.log('Announcement saved');
+                }).catch(error => {
+                    console.error('Error saving announcement: ', error);
+                });
+            });
+
             auth.signInAnonymously().then(() => {
+                // Fetch songs
                 db.collection("songs").onSnapshot((querySnapshot) => {
                     const songListEl = document.getElementById("song-list");
                     songListEl.innerHTML = "";
@@ -696,6 +802,17 @@
                         songListEl.appendChild(listItem);
                     });
                 });
+
+                // Fetch announcement
+                db.collection('announcements').doc('latest').onSnapshot((doc) => {
+                    if (doc.exists) {
+                        announcementContent.textContent = doc.data().content;
+                        announcementInput.value = doc.data().content;
+                    } else {
+                        announcementContent.textContent = '공지사항이 없습니다.';
+                    }
+                });
+
             }).catch((error) => {
                 console.error("Authentication failed:", error);
                 const songListEl = document.getElementById("song-list");
