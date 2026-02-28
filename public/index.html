@@ -340,14 +340,24 @@
         <div id="announcement-dialog" class="mdc-dialog">
             <div class="mdc-dialog__container">
                 <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="announcement-dialog-title">
-                    <h2 class="mdc-dialog__title" id="announcement-dialog-title">공지사항 수정</h2>
+                    <h2 class="mdc-dialog__title" id="announcement-dialog-title">관리자 설정</h2>
                     <div class="mdc-dialog__content">
-                        <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                        <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%; margin-bottom: 16px;">
                             <textarea id="announcement-input" class="mdc-text-field__input" rows="8"></textarea>
                             <div class="mdc-notched-outline">
                                 <div class="mdc-notched-outline__leading"></div>
                                 <div class="mdc-notched-outline__notch">
                                     <label for="announcement-input" class="mdc-floating-label">공지 내용</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                        <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField" style="width: 100%;">
+                            <input type="date" id="dday-input" class="mdc-text-field__input">
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="dday-input" class="mdc-floating-label mdc-floating-label--float-above">D-Day 날짜</label>
                                 </div>
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>
@@ -378,23 +388,6 @@
             mdc.autoInit();
 
             const dDayElement = document.getElementById('d-day');
-            if (dDayElement) {
-                const dDay = new Date('2025-12-07');
-                const today = new Date();
-                dDay.setHours(0, 0, 0, 0);
-                today.setHours(0, 0, 0, 0);
-                
-                const diffTime = dDay.getTime() - today.getTime();
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (diffDays > 0) {
-                    dDayElement.textContent = `D-${diffDays}`;
-                } else if (diffDays === 0) {
-                    dDayElement.textContent = 'D-Day';
-                } else {
-                    dDayElement.textContent = `D+${Math.abs(diffDays)}`;
-                }
-            }
             
             const db = firebase.firestore();
             const auth = firebase.auth();
@@ -426,6 +419,7 @@
             const announcementDialog = new mdc.dialog.MDCDialog(document.getElementById('announcement-dialog'));
             const passwordInput = document.getElementById('password-input');
             const announcementInput = document.getElementById('announcement-input');
+            const dDayInput = document.getElementById('dday-input');
 
             // Game elements
             const gameTitle = document.getElementById('game-title');
@@ -748,10 +742,17 @@
             }
 
             // --- Announcement Logic ---
-            dDayElement.addEventListener('click', () => {
-                passwordInput.value = '';
-                passwordDialog.open();
+            let dDayPressTimer;
+            dDayElement.addEventListener('pointerdown', (e) => {
+                if (e.button !== 0) return; // Only process left click
+                dDayPressTimer = setTimeout(() => {
+                    passwordInput.value = '';
+                    passwordDialog.open();
+                }, 1000);
             });
+            dDayElement.addEventListener('pointerup', () => clearTimeout(dDayPressTimer));
+            dDayElement.addEventListener('pointerleave', () => clearTimeout(dDayPressTimer));
+            dDayElement.addEventListener('contextmenu', e => e.preventDefault());
 
             document.getElementById('submit-password-button').addEventListener('click', () => {
                 const enteredPassword = passwordInput.value;
@@ -769,6 +770,8 @@
 
             document.getElementById('save-announcement-button').addEventListener('click', () => {
                 const newAnnouncement = announcementInput.value;
+                const newDDay = dDayInput.value;
+
                 db.collection('announcements').doc('latest').set({
                     content: newAnnouncement,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -777,6 +780,12 @@
                 }).catch(error => {
                     console.error('Error saving announcement: ', error);
                 });
+
+                if (newDDay) {
+                    db.collection('config').doc('dday').set({
+                        date: newDDay
+                    }).catch(error => console.error('Error saving DDay: ', error));
+                }
             });
 
             auth.signInAnonymously().then(() => {
@@ -810,6 +819,33 @@
                         announcementInput.value = doc.data().content;
                     } else {
                         announcementContent.textContent = '공지사항이 없습니다.';
+                    }
+                });
+
+                // Fetch D-Day
+                db.collection('config').doc('dday').onSnapshot((doc) => {
+                    let dDayDateStr = '2025-12-07'; // fallback
+                    if (doc.exists && doc.data().date) {
+                        dDayDateStr = doc.data().date;
+                    }
+                    if (dDayInput) dDayInput.value = dDayDateStr;
+                    
+                    if (dDayElement) {
+                        const dDay = new Date(dDayDateStr);
+                        const today = new Date();
+                        dDay.setHours(0, 0, 0, 0);
+                        today.setHours(0, 0, 0, 0);
+                        
+                        const diffTime = dDay.getTime() - today.getTime();
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        if (diffDays > 0) {
+                            dDayElement.textContent = `D-${diffDays}`;
+                        } else if (diffDays === 0) {
+                            dDayElement.textContent = 'D-Day';
+                        } else {
+                            dDayElement.textContent = `D+${Math.abs(diffDays)}`;
+                        }
                     }
                 });
 

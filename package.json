@@ -1,4 +1,6 @@
 {
+  "name": "rothem-songs",
+  "version": "1.0.0",
   "dependencies": {
     "firebase": "^12.3.0",
     "firebase-admin": "^13.5.0"
