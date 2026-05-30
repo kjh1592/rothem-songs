@@ -67,24 +67,24 @@
     "media": {
       "full": {
         "youtube": "https://www.youtube.com/embed/6Itbi-X7IEk?si=i0DBqIkMRoTNKIJU",
-        "mp3": ""
+        "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%82%98%EB%AF%BF%EB%84%A4-satb.mp3"
       },
       "parts": {
         "soprano": {
           "youtube": "",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%82%98%EB%AF%BF%EB%84%A4%20s.mp3"
         },
         "alto": {
           "youtube": "",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%82%98%EB%AF%BF%EB%84%A4%20a.mp3"
         },
         "tenor": {
           "youtube": "",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%82%98%EB%AF%BF%EB%84%A4%20t.mp3"
         },
         "bass": {
           "youtube": "",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EB%82%98%EB%AF%BF%EB%84%A4%20b.mp3"
         }
       }
     }
