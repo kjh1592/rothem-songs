@@ -7,24 +7,24 @@
     "media": {
       "full": {
         "youtube": "https://www.youtube.com/embed/5OqsyXNOfAs?si=9EBjMEbvt_dLZ6En",
-        "mp3": ""
+        "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EC%A3%BC%20%EC%98%88%EC%88%98%20%EB%82%98%EC%9D%98%20%EC%82%B0%20%EC%86%8C%EB%A7%9D%20Full.mp3"
       },
       "parts": {
         "soprano": {
           "youtube": "https://www.youtube.com/embed/3nW_0Nk3paw?si=ZeoU1HzuKLApW_4S",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EC%A3%BC%20%EC%98%88%EC%88%98%20%EB%82%98%EC%9D%98%20%EC%82%B0%20%EC%86%8C%EB%A7%9D%20Soprano.mp3"
         },
         "alto": {
           "youtube": "https://www.youtube.com/embed/hQokQJ_Ch5E?si=jdY6SkxvR8Gi70hD",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EC%A3%BC%20%EC%98%88%EC%88%98%20%EB%82%98%EC%9D%98%20%EC%82%B0%20%EC%86%8C%EB%A7%9D%20Alto.mp3"
         },
         "tenor": {
           "youtube": "https://www.youtube.com/embed/J5FxrzXyGQo?si=W6reoSqo6xh74tWX",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EC%A3%BC%20%EC%98%88%EC%88%98%20%EB%82%98%EC%9D%98%20%EC%82%B0%20%EC%86%8C%EB%A7%9D%20Tenor.mp3"
         },
         "bass": {
           "youtube": "https://www.youtube.com/embed/sDA5jWkseEY?si=FfyYWeatianqz53t",
-          "mp3": ""
+          "mp3": "https://github.com/kjh1592/rothem-songs/raw/refs/heads/main/res/%EC%A3%BC%20%EC%98%88%EC%88%98%20%EB%82%98%EC%9D%98%20%EC%82%B0%20%EC%86%8C%EB%A7%9D%20Bass.mp3"
         }
       }
     }
